@@ -1,5 +1,6 @@
 package com.example.popularmovies;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -8,14 +9,21 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
-    private String url = "bla";
+    static final String MOST_POPULAR_KEY = "popularity.desc";
+    static final String HIGHEST_RATED_KEY = "vote_average.desc";
+    private String url = MOST_POPULAR_KEY;
     private TextView textView;
+    MainViewModel model;
+    LiveData<String> movieDBResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,15 +34,36 @@ public class MainActivity extends AppCompatActivity {
         Picasso.get().setIndicatorsEnabled(true);
         Picasso.get().load("https://www.tate.org.uk/art/images/work/T/T05/T05010_10.jpg").into(imageView);
 
-        MainViewModel model = ViewModelProviders.of(this).get(MainViewModel.class);
-        LiveData<String> movieDBResult = model.getJsonReturn(url);
+        model = ViewModelProviders.of(this).get(MainViewModel.class);
+        movieDBResult = model.getJsonReturn(url);
         movieDBResult.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 textView.setText(s);
             }
         });
+    }
 
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.highest_rated_menu:
+                model.createJsonReturn(HIGHEST_RATED_KEY);
+                return true;
+            case R.id.most_popular_menu:
+                model.createJsonReturn(MOST_POPULAR_KEY);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

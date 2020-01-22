@@ -15,13 +15,17 @@ public class MainViewModel extends ViewModel {
 
     public MutableLiveData<String> jsonReturn;
 
-    public MutableLiveData<String>getJsonReturn(String githubQuery) {
+    public MutableLiveData<String>getJsonReturn(String sortBy) {
         if (jsonReturn == null) {
             jsonReturn = new MutableLiveData<>();
-            URL githubSearchUrl = NetworkUtils.buildUrl("popularity.desc");
-            new GithubQueryTask().execute(githubSearchUrl);
+            createJsonReturn(sortBy);
         }
         return jsonReturn;
+    }
+
+    public void createJsonReturn(String sortBy){
+        URL githubSearchUrl = NetworkUtils.buildUrl(sortBy);
+        new GithubQueryTask().execute(githubSearchUrl);
     }
 
     public class GithubQueryTask extends AsyncTask<URL, Void, String> {
@@ -31,7 +35,7 @@ public class MainViewModel extends ViewModel {
             URL searchUrl = params[0];
             String githubSearchResults = null;
             String string = searchUrl.toString();
-
+            Log.d("build", "doInBackground: " + string);
             try {
                 githubSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
             } catch (IOException e) {

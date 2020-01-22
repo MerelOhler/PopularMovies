@@ -8,7 +8,7 @@ public class MovieToShow {
     private String releaseDate;
 
     public MovieToShow(String moviePosterUrl, String originalTitle, String synopsis, String rating, String releaseDate) {
-        this.moviePosterUrl = moviePosterUrl;
+        this.moviePosterUrl = "https://image.tmdb.org/t/p/w185/" + moviePosterUrl;
         this.originalTitle = originalTitle;
         this.synopsis = synopsis;
         this.rating = rating;

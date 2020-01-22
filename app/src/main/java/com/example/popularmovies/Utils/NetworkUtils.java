@@ -17,6 +17,7 @@
 package com.example.popularmovies.Utils;
 
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,43 +26,34 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-
-        import android.net.Uri;
-
-        import java.io.IOException;
-        import java.io.InputStream;
-        import java.net.HttpURLConnection;
-        import java.net.MalformedURLException;
-        import java.net.URL;
-        import java.util.Scanner;
-
 /**
  * These utilities will be used to communicate with the network.
  */
 public class NetworkUtils {
 
-    final static String GITHUB_BASE_URL =
-            "https://api.github.com/search/repositories";
-
-    final static String PARAM_QUERY = "q";
+    final static String MOVIEDB_BASE_URL =
+            "https://api.themoviedb.org/3/discover/movie?";
 
     /*
      * The sort field. One of stars, forks, or updated.
      * Default: results are sorted by best match if no field is specified.
      */
-    final static String PARAM_SORT = "sort";
-    final static String sortBy = "stars";
+    final static String PARAM_SORT = "sort_by";
+
+
+    final static String API_KEY_LABEL = "api_key";
+    final static String API_KEY = "3c5b2ed2d4361f91b5f0bfb1186d5619";
 
     /**
-     * Builds the URL used to query GitHub.
+     * Builds the URL used to query MovieDB.
      *
-     * @param githubSearchQuery The keyword that will be queried for.
-     * @return The URL to use to query the GitHub server.
+     * @param sortby The keyword that will be queried for.
+     * @return The URL to use to query the MovieDB server.
      */
-    public static URL buildUrl(String githubSearchQuery) {
-        Uri builtUri = Uri.parse(GITHUB_BASE_URL).buildUpon()
-                .appendQueryParameter(PARAM_QUERY, githubSearchQuery)
-                .appendQueryParameter(PARAM_SORT, sortBy)
+    public static URL buildUrl(String sortby) {
+        Uri builtUri = Uri.parse(MOVIEDB_BASE_URL).buildUpon()
+                .appendQueryParameter(API_KEY_LABEL,API_KEY)
+                .appendQueryParameter(PARAM_SORT, sortby)
                 .build();
 
         URL url = null;
@@ -85,7 +77,6 @@ public class NetworkUtils {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
             InputStream in = urlConnection.getInputStream();
-
             Scanner scanner = new Scanner(in);
             scanner.useDelimiter("\\A");
 

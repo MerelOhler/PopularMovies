@@ -1,6 +1,7 @@
 package com.example.popularmovies;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -17,7 +18,7 @@ public class MainViewModel extends ViewModel {
     public MutableLiveData<String>getJsonReturn(String githubQuery) {
         if (jsonReturn == null) {
             jsonReturn = new MutableLiveData<>();
-            URL githubSearchUrl = NetworkUtils.buildUrl(githubQuery);
+            URL githubSearchUrl = NetworkUtils.buildUrl("popularity.desc");
             new GithubQueryTask().execute(githubSearchUrl);
         }
         return jsonReturn;
@@ -29,6 +30,8 @@ public class MainViewModel extends ViewModel {
         protected String doInBackground(URL... params) {
             URL searchUrl = params[0];
             String githubSearchResults = null;
+            String string = searchUrl.toString();
+
             try {
                 githubSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
             } catch (IOException e) {

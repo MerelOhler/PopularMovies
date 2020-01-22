@@ -15,7 +15,10 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.popularmovies.Utils.JSONUtils;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     static final String MOST_POPULAR_KEY = "popularity.desc";
@@ -24,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView textView;
     MainViewModel model;
     LiveData<String> movieDBResult;
+    ArrayList<MovieToShow> movies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(String s) {
                 textView.setText(s);
+                ArrayList<MovieToShow> moviesToShow = JSONUtils.parseMovies(s);
             }
         });
     }

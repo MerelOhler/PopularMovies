@@ -1,16 +1,18 @@
-public class Movie {
+package com.example.popularmovies;
+
+public class MovieToShow {
     private String moviePosterUrl;
     private String originalTitle;
     private String synopsis;
     private String rating;
-    private String realeaseDate;
+    private String releaseDate;
 
-    public Movie(String moviePosterUrl, String originalTitle, String synopsis, String rating, String realeaseDate) {
+    public MovieToShow(String moviePosterUrl, String originalTitle, String synopsis, String rating, String releaseDate) {
         this.moviePosterUrl = moviePosterUrl;
         this.originalTitle = originalTitle;
         this.synopsis = synopsis;
         this.rating = rating;
-        this.realeaseDate = realeaseDate;
+        this.releaseDate = releaseDate;
     }
 
     public String getMoviePosterUrl() {
@@ -45,11 +47,11 @@ public class Movie {
         this.rating = rating;
     }
 
-    public String getRealeaseDate() {
-        return realeaseDate;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setRealeaseDate(String realeaseDate) {
-        this.realeaseDate = realeaseDate;
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 }

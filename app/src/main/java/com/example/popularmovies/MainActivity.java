@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -91,16 +92,15 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
 
     @Override
     public void onClick(MovieToShow currentMovie) {
-        Context context = this;
-        Toast toast = Toast.makeText(context, currentMovie.getMoviePosterUrl(),Toast.LENGTH_LONG);
+        Intent intent = new Intent(this, MovieDetailActivity.class);
+        intent.putExtra(MovieDetailActivity.EXTRA_NAME, currentMovie.getOriginalTitle());
+        intent.putExtra(MovieDetailActivity.EXTRA_IMAGE_URL, currentMovie.getMoviePosterUrl());
+        intent.putExtra(MovieDetailActivity.EXTRA_SYNOPSIS, currentMovie.getSynopsis());
+        intent.putExtra(MovieDetailActivity.EXTRA_RATING, currentMovie.getRating());
+        intent.putExtra(MovieDetailActivity.EXTRA_RELEASE_DATE, currentMovie.getReleaseDate());
+        startActivity(intent);
 
     }
-//    @Override
-//    public void onClick(Movie currentMovie) {
-//        Context context = this;
-//        Toast.makeText(context, weatherForDay, Toast.LENGTH_SHORT)
-//                .show();
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,16 +19,15 @@ public class MovieDetailActivity extends AppCompatActivity {
     private static final String DEFAULT_NAME = "null";
 
     public static final String EXTRA_IMAGE_URL = "extra_image_url";
-    private static final String DEFAULT_IMAGE_URL = "null";
 
     public static final String EXTRA_SYNOPSIS = "extra_synopsis";
-    private static final String DEFAULT_SYNOPSIS = "null";
 
     public static final String EXTRA_RATING = "extra_rating";
-    private static final String DEFAULT_RATING = "null";
 
     public static final String EXTRA_RELEASE_DATE = "extra_release_date";
-    private static final String DEFAULT_RELEASE_DATE = "null";
+
+    public static final String EXTRA_HAS_PICTURE = "extra_has_picture";
+    private static final boolean DEFAULT_HAS_PICTURE = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +48,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         String rating = intent.getStringExtra(EXTRA_RATING);
         String releaseDate = intent.getStringExtra(EXTRA_RELEASE_DATE);
         String synopsis = intent.getStringExtra(EXTRA_SYNOPSIS);
+        boolean hasPicture = intent.getBooleanExtra(EXTRA_HAS_PICTURE,DEFAULT_HAS_PICTURE);
 
         Log.d("MovieDetailActivity", "onCreate: " + imageURL);
 
@@ -56,20 +57,37 @@ public class MovieDetailActivity extends AppCompatActivity {
         //setTitle(name);
 
         ImageView moviePosterIV = findViewById(R.id.movie_poster_detail_iv);
-        if (imageURL!= null){
+        TextView unavailablePosterTV = findViewById(R.id.movie_poster_unavailable_detail_tv);
+        if (hasPicture){
+            moviePosterIV.setVisibility(View.VISIBLE);
+            unavailablePosterTV.setVisibility(View.GONE);
             Picasso.get().load(imageURL).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(moviePosterIV);
+        }else{
+            moviePosterIV.setMinimumHeight(250);
+            moviePosterIV.setVisibility(View.INVISIBLE);
+            unavailablePosterTV.setVisibility(View.VISIBLE);
+            unavailablePosterTV.setText("Poster for " + name + " is currently unavailable");
         }
 
         TextView ratingTV = findViewById(R.id.rating_detail_tv);
-        ratingTV.setText(rating);
+        available(ratingTV,rating);
 
         TextView releaseDateTV = findViewById(R.id.release_date_detail_tv);
-        releaseDateTV.setText(releaseDate);
+        available(releaseDateTV,releaseDate);
 
         TextView synopsisTV = findViewById(R.id.synopsis_detail_tv);
-        synopsisTV.setText(synopsis);
+        available(synopsisTV,synopsis);
 
 
+    }
+
+    private void available(TextView textView, String string){
+        Log.d("available", "available: " + string);
+        if(string.isEmpty()||string.equals("null")){
+            textView.setText(R.string.currently_unavailable);
+        }else{
+            textView.setText(string);
+        }
     }
 
     private void closeOnError() {

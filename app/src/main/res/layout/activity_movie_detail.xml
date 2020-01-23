@@ -24,6 +24,17 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
+                android:id="@+id/movie_poster_unavailable_detail_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/movie_poster_detail_iv"
+                app:layout_constraintBottom_toBottomOf="@id/movie_poster_detail_iv"
+                android:textSize="24sp"
+                android:visibility="visible"/>
+
+            <TextView
                 android:id="@+id/title_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

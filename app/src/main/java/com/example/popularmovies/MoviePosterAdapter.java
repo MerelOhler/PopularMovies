@@ -45,11 +45,13 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
      */
     public class MoviePosterAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final ImageView mMoviePosterIV;
+        public final TextView mMovieUnavailableTV;
 
         public MoviePosterAdapterViewHolder(View view) {
             super(view);
             Log.d(TAG, "MoviePosterAdapterViewHolder: ");
             mMoviePosterIV = view.findViewById(R.id.movie_poster_iv);
+            mMovieUnavailableTV = view.findViewById(R.id.movie_poster_unavailable);
             // COMPLETED (7) Call setOnClickListener on the view passed into the constructor (use 'this' as the OnClickListener)
             view.setOnClickListener(this);
         }
@@ -104,8 +106,15 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
         MovieToShow currentMovie = mMovieData.get(position);
         String posterURL = currentMovie.getMoviePosterUrl();
         Log.d(TAG, "onBindViewHolder: " +posterURL);
-
-        Picasso.get().load(posterURL).placeholder(R.mipmap.ic_launcher).into(moviePosterAdapterViewHolder.mMoviePosterIV);
+        if (currentMovie.isHasPicture()){
+            moviePosterAdapterViewHolder.mMovieUnavailableTV.setVisibility(View.GONE);
+            moviePosterAdapterViewHolder.mMoviePosterIV.setVisibility(View.VISIBLE);
+            Picasso.get().load(posterURL).placeholder(R.mipmap.ic_launcher).into(moviePosterAdapterViewHolder.mMoviePosterIV);
+        }else{
+            moviePosterAdapterViewHolder.mMovieUnavailableTV.setVisibility(View.VISIBLE);
+            moviePosterAdapterViewHolder.mMoviePosterIV.setVisibility(View.GONE);
+            moviePosterAdapterViewHolder.mMovieUnavailableTV.setText("Poster for " + currentMovie.getOriginalTitle() + " is currently unavailable");
+        }
     }
 
     /**

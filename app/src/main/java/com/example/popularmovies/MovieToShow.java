@@ -6,9 +6,14 @@ public class MovieToShow {
     private String synopsis;
     private String rating;
     private String releaseDate;
+    private boolean hasPicture = true;
 
     public MovieToShow(String moviePosterUrl, String originalTitle, String synopsis, String rating, String releaseDate) {
-        this.moviePosterUrl = "https://image.tmdb.org/t/p/w185/" + moviePosterUrl;
+        if(moviePosterUrl == "null"){
+            hasPicture = false;
+            this.moviePosterUrl = moviePosterUrl;
+        }else{
+        this.moviePosterUrl = "https://image.tmdb.org/t/p/w185/" + moviePosterUrl;}
         this.originalTitle = originalTitle;
         this.synopsis = synopsis;
         this.rating = rating;
@@ -53,5 +58,9 @@ public class MovieToShow {
 
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public boolean isHasPicture() {
+        return hasPicture;
     }
 }

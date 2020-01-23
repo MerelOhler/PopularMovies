@@ -98,8 +98,8 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
         intent.putExtra(MovieDetailActivity.EXTRA_SYNOPSIS, currentMovie.getSynopsis());
         intent.putExtra(MovieDetailActivity.EXTRA_RATING, currentMovie.getRating());
         intent.putExtra(MovieDetailActivity.EXTRA_RELEASE_DATE, currentMovie.getReleaseDate());
+        intent.putExtra(MovieDetailActivity.EXTRA_HAS_PICTURE,currentMovie.isHasPicture());
         startActivity(intent);
-
     }
 
     @Override

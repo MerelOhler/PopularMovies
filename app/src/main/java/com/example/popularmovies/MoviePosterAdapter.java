@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -46,12 +48,14 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
     public class MoviePosterAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final ImageView mMoviePosterIV;
         public final TextView mMovieUnavailableTV;
+        public final ProgressBar mProgressBar;
 
         public MoviePosterAdapterViewHolder(View view) {
             super(view);
             Log.d(TAG, "MoviePosterAdapterViewHolder: ");
             mMoviePosterIV = view.findViewById(R.id.movie_poster_iv);
             mMovieUnavailableTV = view.findViewById(R.id.movie_poster_unavailable);
+            mProgressBar = view.findViewById(R.id.movie_poster_pb);
             // COMPLETED (7) Call setOnClickListener on the view passed into the constructor (use 'this' as the OnClickListener)
             view.setOnClickListener(this);
         }
@@ -102,14 +106,26 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
      * @param position                  The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(MoviePosterAdapterViewHolder moviePosterAdapterViewHolder, int position) {
+    public void onBindViewHolder(final MoviePosterAdapterViewHolder moviePosterAdapterViewHolder, int position) {
         MovieToShow currentMovie = mMovieData.get(position);
         String posterURL = currentMovie.getMoviePosterUrl();
         Log.d(TAG, "onBindViewHolder: " +posterURL);
+        moviePosterAdapterViewHolder.mProgressBar.setVisibility(View.VISIBLE);
+        moviePosterAdapterViewHolder.mMoviePosterIV.setVisibility(View.GONE);
         if (currentMovie.isHasPicture()){
             moviePosterAdapterViewHolder.mMovieUnavailableTV.setVisibility(View.GONE);
             moviePosterAdapterViewHolder.mMoviePosterIV.setVisibility(View.VISIBLE);
-            Picasso.get().load(posterURL).placeholder(R.mipmap.ic_launcher).into(moviePosterAdapterViewHolder.mMoviePosterIV);
+            Picasso.get().load(posterURL).into(moviePosterAdapterViewHolder.mMoviePosterIV, new Callback() {
+                @Override
+                public void onSuccess() {
+                    moviePosterAdapterViewHolder.mProgressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onError(Exception e) {
+
+                }
+            });
         }else{
             moviePosterAdapterViewHolder.mMovieUnavailableTV.setVisibility(View.VISIBLE);
             moviePosterAdapterViewHolder.mMoviePosterIV.setVisibility(View.GONE);

@@ -4,7 +4,6 @@ import android.media.Rating;
 import android.util.Log;
 
 import com.example.popularmovies.MovieToShow;
-import com.example.popularmovies.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,7 +53,10 @@ public class JSONUtils {
     }
 
     private static String getResult(String key, JSONObject movie) throws JSONException {
-        return movie.has(key) ? movie.getString(key) : "Currently unavailable";
+        if(movie.has(key)&& !movie.getString(key).equals("null")&& !movie.getString(key).isEmpty()){
+            return movie.getString(key);
+        }
+        return "Currently unavailable";
     }
 
 }

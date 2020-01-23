@@ -1,5 +1,8 @@
 package com.example.popularmovies;
 
+import android.content.res.Resources;
+import android.util.Log;
+
 public class MovieToShow {
     private String moviePosterUrl;
     private String originalTitle;
@@ -9,10 +12,13 @@ public class MovieToShow {
     private boolean hasPicture = true;
 
     public MovieToShow(String moviePosterUrl, String originalTitle, String synopsis, String rating, String releaseDate) {
-        if(moviePosterUrl == "null"){
+        if(moviePosterUrl.equals("Currently unavailable")){
             hasPicture = false;
             this.moviePosterUrl = moviePosterUrl;
+            Log.d("same", "MovieToShow: no picture available " + moviePosterUrl);
+
         }else{
+            Log.d("same", "MovieToShow: picture is available " + moviePosterUrl);
         this.moviePosterUrl = "https://image.tmdb.org/t/p/w185/" + moviePosterUrl;}
         this.originalTitle = originalTitle;
         this.synopsis = synopsis;

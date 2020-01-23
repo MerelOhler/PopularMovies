@@ -63,6 +63,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             unavailablePosterTV.setVisibility(View.GONE);
             Picasso.get().load(imageURL).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(moviePosterIV);
         }else{
+            Log.d("same", "onCreate: does not have picture");
             moviePosterIV.setMinimumHeight(250);
             moviePosterIV.setVisibility(View.INVISIBLE);
             unavailablePosterTV.setVisibility(View.VISIBLE);
@@ -84,7 +85,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private void available(TextView textView, String string){
         Log.d("available", "available: " + string);
         if(string.isEmpty()||string.equals("null")){
-            textView.setText(R.string.currently_unavailable);
+            textView.setText(R.string.currently_unavailable + " 2");
         }else{
             textView.setText(string);
         }

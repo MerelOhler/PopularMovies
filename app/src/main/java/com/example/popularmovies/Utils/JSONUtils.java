@@ -32,15 +32,14 @@ public class JSONUtils {
             JSONObject jsonObject = new JSONObject(json);
             JSONArray results = jsonObject.getJSONArray(RESULTS_KEY);
             for(int i = 0; i < results.length();i++){
-                if (results.optJSONObject(i).has(TITLE_KEY)){
-
+                if(!results.isNull(i)) {
                     JSONObject movie = results.getJSONObject(i);
-                    originalTitle = getResult(TITLE_KEY,movie);
-                    moviePosterUrl = getResult(POSTER_URL_KEY,movie);
-                    synopsis = getResult(SYNOPSIS_KEY,movie);
-                    rating = getResult(RATING_KEY,movie);
-                    releaseDate = getResult(RELEASE_DATE_KEY,movie);
-                    moviesToShow.add(new MovieToShow(moviePosterUrl,originalTitle,synopsis,rating,releaseDate));
+                    originalTitle = getResult(TITLE_KEY, movie);
+                    moviePosterUrl = getResult(POSTER_URL_KEY, movie);
+                    synopsis = getResult(SYNOPSIS_KEY, movie);
+                    rating = getResult(RATING_KEY, movie);
+                    releaseDate = getResult(RELEASE_DATE_KEY, movie);
+                    moviesToShow.add(new MovieToShow(moviePosterUrl, originalTitle, synopsis, rating, releaseDate));
                 }
             }
 

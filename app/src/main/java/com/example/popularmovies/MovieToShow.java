@@ -6,19 +6,16 @@ public class MovieToShow {
     private final String synopsis;
     private final String rating;
     private final String releaseDate;
-    private boolean hasPicture = true;
+    private final String MOVIE_URL = "https://image.tmdb.org/t/p/w185/";
 
-    public MovieToShow(String moviePosterUrl, String originalTitle, String synopsis, String rating, String releaseDate) {
-        if(moviePosterUrl.equals("Currently unavailable")){
-            hasPicture = false;
-            this.moviePosterUrl = moviePosterUrl;
+    public MovieToShow(String moviePosterUrl, String originalTitle, String synopsis, String rating,
+                       String releaseDate) {
 
-        }else{
-            this.moviePosterUrl = "https://image.tmdb.org/t/p/w185/" + moviePosterUrl;}
-            this.originalTitle = originalTitle;
-            this.synopsis = synopsis;
-            this.rating = rating;
-            this.releaseDate = releaseDate;
+        this.moviePosterUrl = MOVIE_URL + moviePosterUrl;
+        this.originalTitle = originalTitle;
+        this.synopsis = synopsis;
+        this.rating = rating;
+        this.releaseDate = releaseDate;
     }
 
     public String getMoviePosterUrl() {
@@ -41,7 +38,4 @@ public class MovieToShow {
         return releaseDate;
     }
 
-    public boolean isHasPicture() {
-        return hasPicture;
-    }
 }

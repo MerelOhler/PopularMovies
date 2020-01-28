@@ -2,12 +2,12 @@ package com.example.popularmovies;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import androidx.annotation.Nullable;
@@ -22,7 +22,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     public static final String EXTRA_RATING = "extra_rating";
     public static final String EXTRA_RELEASE_DATE = "extra_release_date";
     public static final String EXTRA_HAS_PICTURE = "extra_has_picture";
-    private static final boolean DEFAULT_HAS_PICTURE = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,7 +32,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             closeOnError();
         }
 
-        String name = intent.getStringExtra(EXTRA_NAME);
+        final String name = intent.getStringExtra(EXTRA_NAME);
         if (name.equals(DEFAULT_NAME)) {
             // EXTRA_POSITION not found in intent
             closeOnError();
@@ -43,28 +42,31 @@ public class MovieDetailActivity extends AppCompatActivity {
         String rating = intent.getStringExtra(EXTRA_RATING);
         String releaseDate = intent.getStringExtra(EXTRA_RELEASE_DATE);
         String synopsis = intent.getStringExtra(EXTRA_SYNOPSIS);
-        boolean hasPicture = intent.getBooleanExtra(EXTRA_HAS_PICTURE,DEFAULT_HAS_PICTURE);
 
         //setTitle(name);
-        TextView nameTV = findViewById(R.id.title_detail_tv);
+         TextView nameTV = findViewById(R.id.title_detail_tv);
         nameTV.setText(name);
 
         //set image
-        ImageView moviePosterIV = findViewById(R.id.movie_poster_detail_iv);
-        TextView unavailablePosterTV = findViewById(R.id.movie_poster_unavailable_detail_tv);
-        if (hasPicture){
-            moviePosterIV.setVisibility(View.VISIBLE);
-            unavailablePosterTV.setVisibility(View.GONE);
-            Picasso.get().load(imageURL).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(moviePosterIV);
-        }else{
-            Log.d("same", "onCreate: does not have picture");
-            moviePosterIV.setMinimumHeight(250);
-            moviePosterIV.setVisibility(View.INVISIBLE);
-            unavailablePosterTV.setVisibility(View.VISIBLE);
-            String posterUnavailable = getString(R.string.poster_for) + " " + name + " " +
-                    getString(R.string.is_currently_unavailable);
-            unavailablePosterTV.setText(posterUnavailable);
-        }
+        final ImageView moviePosterIV = findViewById(R.id.movie_poster_detail_iv);
+        final TextView unavailablePosterTV = findViewById(R.id.movie_poster_unavailable_detail_tv);
+        Picasso.get().load(imageURL).into(moviePosterIV, new Callback() {
+            @Override
+            public void onSuccess() {
+                moviePosterIV.setVisibility(View.VISIBLE);
+                unavailablePosterTV.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                String posterUnavailable =posterUnavailable(name);
+                moviePosterIV.setMinimumHeight(250);
+                moviePosterIV.setVisibility(View.INVISIBLE);
+                unavailablePosterTV.setVisibility(View.VISIBLE);
+                unavailablePosterTV.setText(posterUnavailable);
+
+            }
+        });
 
         //set rating
         TextView ratingTV = findViewById(R.id.rating_detail_tv);
@@ -79,6 +81,11 @@ public class MovieDetailActivity extends AppCompatActivity {
         available(synopsisTV,synopsis);
 
 
+    }
+
+    private String posterUnavailable(String name) {
+        return getString(R.string.poster_for) + " " + name + " " +
+                getString(R.string.is_currently_unavailable);
     }
 
 

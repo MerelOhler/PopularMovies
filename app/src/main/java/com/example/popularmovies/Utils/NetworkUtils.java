@@ -16,11 +16,8 @@
 
 package com.example.popularmovies.Utils;
 
-import android.content.res.Resources;
 import android.net.Uri;
 import android.util.Log;
-
-import com.example.popularmovies.R;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -45,6 +42,7 @@ public class NetworkUtils {
     private final static String API_KEY_LABEL = "api_key";
     private final static String API_KEY = "3c5b2ed2d4361f91b5f0bfb1186d5619";
 
+
     /**
      * Builds the URL used to query MovieDB.
      *
@@ -61,7 +59,6 @@ public class NetworkUtils {
         URL url = null;
         try {
             url = new URL(builtUri.toString());
-            Log.d("buildurl", "buildUrl: " + url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -90,7 +87,7 @@ public class NetworkUtils {
             }
         } catch (FileNotFoundException e){
             Log.d("NetworkUtils", "getResponseFromHttpUrl: ");
-            return Resources.getSystem().getString(R.string.nothing);}
+            return "nothing";}
         finally {
             urlConnection.disconnect();
         }

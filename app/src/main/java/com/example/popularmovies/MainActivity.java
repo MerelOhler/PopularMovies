@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,7 +27,6 @@ import androidx.recyclerview.widget.RecyclerView;
 public class MainActivity extends AppCompatActivity implements MoviePosterAdapter.MoviePosterAdapterOnClickHandler {
     static private final String MOST_POPULAR_KEY = "popularity.desc";
     static private final String HIGHEST_RATED_KEY = "vote_average.desc";
-    private String url = MOST_POPULAR_KEY;
     private RecyclerView mRecyclerView;
     private MoviePosterAdapter mMoviePosterAdapter;
     private GridLayoutManager mLayoutManager;
@@ -36,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
     private TextView mErrorMessageDisplay;
     private ProgressBar mLoadingIndicator;
     private MainViewModel model;
-    private LiveData<String> movieDBResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +52,12 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
 
 
         model = ViewModelProviders.of(this).get(MainViewModel.class);
-        movieDBResult = model.getJsonReturn(url);
+        LiveData<String> movieDBResult = model.getJsonReturn(MOST_POPULAR_KEY);
         mMoviePosterAdapter = new MoviePosterAdapter(this,this);
         mRecyclerView.setAdapter(mMoviePosterAdapter);
         movieDBResult.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                Log.d("main", "onChanged: " + s);
                 if (s.equals(getString(R.string.nothing))) {
                     mLoadingIndicator.setVisibility(View.GONE);
                     mErrorMessageDisplay.setVisibility(View.VISIBLE);
@@ -93,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
         intent.putExtra(MovieDetailActivity.EXTRA_SYNOPSIS, currentMovie.getSynopsis());
         intent.putExtra(MovieDetailActivity.EXTRA_RATING, currentMovie.getRating());
         intent.putExtra(MovieDetailActivity.EXTRA_RELEASE_DATE, currentMovie.getReleaseDate());
-        intent.putExtra(MovieDetailActivity.EXTRA_HAS_PICTURE,currentMovie.isHasPicture());
         //is there a better way to do this?
         startActivity(intent);
     }

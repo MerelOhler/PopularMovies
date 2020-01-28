@@ -32,9 +32,7 @@ public class JSONUtils {
             JSONObject jsonObject = new JSONObject(json);
             JSONArray results = jsonObject.getJSONArray(RESULTS_KEY);
             for(int i = 0; i < results.length();i++){
-                Log.d("iterating", "parseMovies: " +i + results.getJSONObject(i).has(TITLE_KEY) + 1);
                 if (results.optJSONObject(i).has(TITLE_KEY)){
-                    Log.d("iterating", "parseMovies: " +i + results.getJSONObject(i).has(TITLE_KEY) + 2);
 
                     JSONObject movie = results.getJSONObject(i);
                     originalTitle = getResult(TITLE_KEY,movie);
@@ -59,6 +57,7 @@ public class JSONUtils {
             return movie.getString(key);
         }
         return "Currently unavailable";
+        //how can I hardcode this string?
     }
 
 }

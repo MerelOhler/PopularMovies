@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.MoviePosterAdapterViewHolder> {
@@ -20,7 +21,7 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
     private ArrayList<MovieToShow> mMovieData;
 
     private final MoviePosterAdapterOnClickHandler mClickHandler;
-    private Context mContext;
+    private final Context mContext;
 
     /**
      * The interface that receives onClick messages.
@@ -78,6 +79,7 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
      *                  can use this viewType integer to provide a different layout. See
      * @return A new ForecastAdapterViewHolder that holds the View for each list item
      */
+    @NonNull
     @Override
     public MoviePosterAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         Context context = viewGroup.getContext();
@@ -103,29 +105,32 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
     public void onBindViewHolder(final MoviePosterAdapterViewHolder moviePosterAdapterViewHolder, int position) {
         MovieToShow currentMovie = mMovieData.get(position);
         String posterURL = currentMovie.getMoviePosterUrl();
-        String posterUnavailable = mContext.getString(R.string.poster_for) + " " +
-                currentMovie.getOriginalTitle() + " " + mContext.getString(R.string.is_currently_unavailable);
+        final String currentTitle = currentMovie.getOriginalTitle();
         moviePosterAdapterViewHolder.mProgressBar.setVisibility(View.VISIBLE);
         moviePosterAdapterViewHolder.mMoviePosterIV.setVisibility(View.GONE);
-        if (currentMovie.isHasPicture()){
-            moviePosterAdapterViewHolder.mMovieUnavailableTV.setVisibility(View.GONE);
-            moviePosterAdapterViewHolder.mMoviePosterIV.setVisibility(View.VISIBLE);
-            Picasso.get().load(posterURL).into(moviePosterAdapterViewHolder.mMoviePosterIV, new Callback() {
-                @Override
-                public void onSuccess() {
-                    moviePosterAdapterViewHolder.mProgressBar.setVisibility(View.GONE);
-                }
+        Picasso.get().load(posterURL).into(moviePosterAdapterViewHolder.mMoviePosterIV, new Callback() {
+            @Override
+            public void onSuccess() {
+                moviePosterAdapterViewHolder.mMovieUnavailableTV.setVisibility(View.GONE);
+                moviePosterAdapterViewHolder.mMoviePosterIV.setVisibility(View.VISIBLE);
+                moviePosterAdapterViewHolder.mProgressBar.setVisibility(View.GONE);
+            }
 
-                @Override
-                public void onError(Exception e) {
+            @Override
+            public void onError(Exception e) {
+                String posterUnavailable =posterUnavailable(currentTitle);
+                moviePosterAdapterViewHolder.mMovieUnavailableTV.setVisibility(View.VISIBLE);
+                moviePosterAdapterViewHolder.mMoviePosterIV.setVisibility(View.GONE);
+                moviePosterAdapterViewHolder.mMovieUnavailableTV.setText(posterUnavailable);
 
-                }
-            });
-        }else{
-            moviePosterAdapterViewHolder.mMovieUnavailableTV.setVisibility(View.VISIBLE);
-            moviePosterAdapterViewHolder.mMoviePosterIV.setVisibility(View.GONE);
-            moviePosterAdapterViewHolder.mMovieUnavailableTV.setText(posterUnavailable);
-        }
+            }
+        });
+    }
+
+    private String posterUnavailable(String currentTitle){
+        return mContext.getString(R.string.poster_for) + " " +
+                currentTitle + " " + mContext.getString(R.string.is_currently_unavailable);
+
     }
 
     /**

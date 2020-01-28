@@ -1,6 +1,5 @@
 package com.example.popularmovies;
 
-import android.content.res.Resources;
 import android.os.AsyncTask;
 
 import com.example.popularmovies.Utils.NetworkUtils;
@@ -38,7 +37,6 @@ public class MainViewModel extends ViewModel {
                 movieDBSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
             } catch (IOException e) {
                 e.printStackTrace();
-                movieDBSearchResults = Resources.getSystem().getString(R.string.nothing);
             }
             return movieDBSearchResults;
         }

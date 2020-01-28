@@ -26,8 +26,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity implements MoviePosterAdapter.MoviePosterAdapterOnClickHandler {
-    static final String MOST_POPULAR_KEY = "popularity.desc";
-    static final String HIGHEST_RATED_KEY = "vote_average.desc";
+    static private final String MOST_POPULAR_KEY = "popularity.desc";
+    static private final String HIGHEST_RATED_KEY = "vote_average.desc";
     private String url = MOST_POPULAR_KEY;
     private RecyclerView mRecyclerView;
     private MoviePosterAdapter mMoviePosterAdapter;
@@ -35,10 +35,8 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
     private ArrayList<MovieToShow> mMoviesToShow;
     private TextView mErrorMessageDisplay;
     private ProgressBar mLoadingIndicator;
-    private TextView textView;
-    Context context = this;
-    MainViewModel model;
-    LiveData<String> movieDBResult;
+    private MainViewModel model;
+    private LiveData<String> movieDBResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +48,7 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
         mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
         mLoadingIndicator.setVisibility(View.VISIBLE);
-        if (!isNetworkAvailable()){
-            mLoadingIndicator.setVisibility(View.GONE);
-            mErrorMessageDisplay.setVisibility(View.VISIBLE);
-            mErrorMessageDisplay.setText(R.string.no_internet);
-            mRecyclerView.setVisibility(View.GONE);
-        }
+        checkForNetwork();
 
         mLayoutManager
                 = new GridLayoutManager(this,2);
@@ -63,14 +56,13 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
 
         model = ViewModelProviders.of(this).get(MainViewModel.class);
         movieDBResult = model.getJsonReturn(url);
-        mMoviePosterAdapter = new MoviePosterAdapter(this);
+        mMoviePosterAdapter = new MoviePosterAdapter(this,this);
         mRecyclerView.setAdapter(mMoviePosterAdapter);
-        Log.d("MoviePoster", "onCreate: before observe");
         movieDBResult.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                if (s.equals("nothing")) {
-                    Log.d("something went wrong", "onChanged: ");
+                Log.d("main", "onChanged: " + s);
+                if (s.equals(getString(R.string.nothing))) {
                     mLoadingIndicator.setVisibility(View.GONE);
                     mErrorMessageDisplay.setVisibility(View.VISIBLE);
                     mErrorMessageDisplay.setText(R.string.error_message);
@@ -80,11 +72,14 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
                     mErrorMessageDisplay.setVisibility(View.GONE);
                     mRecyclerView.setVisibility(View.VISIBLE);
                     mMoviesToShow = JSONUtils.parseMovies(s);
-                    mMoviePosterAdapter.setMoviePosterData(mMoviesToShow);
-                    mRecyclerView.setLayoutManager(mLayoutManager);
-
-                    Log.d("MainMoviePoster", "onChanged:  MoviePoster " + mMoviesToShow.get(0).getMoviePosterUrl());
-
+                    if (mMoviesToShow !=null) {
+                        mMoviePosterAdapter.setMoviePosterData(mMoviesToShow);
+                        mRecyclerView.setLayoutManager(mLayoutManager);
+                    }else{
+                        mRecyclerView.setVisibility(View.GONE);
+                        mErrorMessageDisplay.setVisibility(View.VISIBLE);
+                        mErrorMessageDisplay.setText(R.string.error_message);
+                    }
                 }
             }
         });
@@ -99,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
         intent.putExtra(MovieDetailActivity.EXTRA_RATING, currentMovie.getRating());
         intent.putExtra(MovieDetailActivity.EXTRA_RELEASE_DATE, currentMovie.getReleaseDate());
         intent.putExtra(MovieDetailActivity.EXTRA_HAS_PICTURE,currentMovie.isHasPicture());
+        //is there a better way to do this?
         startActivity(intent);
     }
 
@@ -114,9 +110,11 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
         switch (item.getItemId()) {
             case R.id.highest_rated_menu:
                 model.createJsonReturn(HIGHEST_RATED_KEY);
+                checkForNetwork();
                 return true;
             case R.id.most_popular_menu:
                 model.createJsonReturn(MOST_POPULAR_KEY);
+                checkForNetwork();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -128,6 +126,15 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void checkForNetwork(){
+        if (!isNetworkAvailable()){
+            mLoadingIndicator.setVisibility(View.GONE);
+            mErrorMessageDisplay.setVisibility(View.VISIBLE);
+            mErrorMessageDisplay.setText(R.string.no_internet);
+            mRecyclerView.setVisibility(View.GONE);
+        }
     }
 
 }

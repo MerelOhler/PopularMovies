@@ -1,7 +1,6 @@
 package com.example.popularmovies;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,19 +8,19 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.MoviePosterAdapterViewHolder> {
 
     private ArrayList<MovieToShow> mMovieData;
 
     private final MoviePosterAdapterOnClickHandler mClickHandler;
-    private final String TAG = "MoviePosterAdapter";
+    private Context mContext;
 
     /**
      * The interface that receives onClick messages.
@@ -30,37 +29,33 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
         void onClick(MovieToShow currentMovie);
     }
 
-    // COMPLETED (4) Add a ForecastAdapterOnClickHandler as a parameter to the constructor and store it in mClickHandler
     /**
      * Creates a ForecastAdapter.
      *
      * @param clickHandler The on-click handler for this adapter. This single handler is called
      *                     when an item is clicked.
      */
-    public MoviePosterAdapter(MoviePosterAdapterOnClickHandler clickHandler) {
+    public MoviePosterAdapter(MoviePosterAdapterOnClickHandler clickHandler, Context context) {
         mClickHandler = clickHandler;
+        mContext = context;
     }
 
-    // COMPLETED (5) Implement OnClickListener in the ForecastAdapterViewHolder class
     /**
      * Cache of the children views for a forecast list item.
      */
     public class MoviePosterAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final ImageView mMoviePosterIV;
-        public final TextView mMovieUnavailableTV;
-        public final ProgressBar mProgressBar;
+        private final ImageView mMoviePosterIV;
+        private final TextView mMovieUnavailableTV;
+        private final ProgressBar mProgressBar;
 
-        public MoviePosterAdapterViewHolder(View view) {
+        private MoviePosterAdapterViewHolder(View view) {
             super(view);
-            Log.d(TAG, "MoviePosterAdapterViewHolder: ");
             mMoviePosterIV = view.findViewById(R.id.movie_poster_iv);
             mMovieUnavailableTV = view.findViewById(R.id.movie_poster_unavailable);
             mProgressBar = view.findViewById(R.id.movie_poster_pb);
-            // COMPLETED (7) Call setOnClickListener on the view passed into the constructor (use 'this' as the OnClickListener)
             view.setOnClickListener(this);
         }
 
-        // COMPLETED (6) Override onClick, passing the clicked day's data to mClickHandler via its onClick method
         /**
          * This gets called by the child views during a click.
          *
@@ -85,7 +80,6 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
      */
     @Override
     public MoviePosterAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        Log.d(TAG, "onCreateViewHolder: ");
         Context context = viewGroup.getContext();
         int layoutIdForListItem = R.layout.movie_poster_view;
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -109,7 +103,8 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
     public void onBindViewHolder(final MoviePosterAdapterViewHolder moviePosterAdapterViewHolder, int position) {
         MovieToShow currentMovie = mMovieData.get(position);
         String posterURL = currentMovie.getMoviePosterUrl();
-        Log.d(TAG, "onBindViewHolder: " +posterURL);
+        String posterUnavailable = mContext.getString(R.string.poster_for) + " " +
+                currentMovie.getOriginalTitle() + " " + mContext.getString(R.string.is_currently_unavailable);
         moviePosterAdapterViewHolder.mProgressBar.setVisibility(View.VISIBLE);
         moviePosterAdapterViewHolder.mMoviePosterIV.setVisibility(View.GONE);
         if (currentMovie.isHasPicture()){
@@ -129,7 +124,7 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
         }else{
             moviePosterAdapterViewHolder.mMovieUnavailableTV.setVisibility(View.VISIBLE);
             moviePosterAdapterViewHolder.mMoviePosterIV.setVisibility(View.GONE);
-            moviePosterAdapterViewHolder.mMovieUnavailableTV.setText("Poster for " + currentMovie.getOriginalTitle() + " is currently unavailable");
+            moviePosterAdapterViewHolder.mMovieUnavailableTV.setText(posterUnavailable);
         }
     }
 
@@ -141,7 +136,6 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
      */
     @Override
     public int getItemCount() {
-        Log.d(TAG, "getItemCount: " + mMovieData.size());
         if (null == mMovieData) return 0;
         return mMovieData.size();
     }
@@ -154,9 +148,7 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
      * @param movieData The new weather data to be displayed.
      */
     public void setMoviePosterData(ArrayList<MovieToShow> movieData) {
-        Log.d(TAG, "setMoviePosterData: ");
         mMovieData = movieData;
-        Log.d(TAG, "setMoviePosterData: " + mMovieData.size());
         notifyDataSetChanged();
     }
 }

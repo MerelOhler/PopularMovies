@@ -11,4 +11,7 @@
     <string name="synopsis_label">Synopsis:</string>
     <string name="currently_unavailable">Currently unavailable</string>
     <string name="no_internet">You are not connected to the internet</string>
+    <string name="poster_for">Poster for </string>
+    <string name="is_currently_unavailable"> is currently unavailable</string>
+    <string name="nothing">nothing</string>
 </resources>

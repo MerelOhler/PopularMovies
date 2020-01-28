@@ -16,8 +16,11 @@
 
 package com.example.popularmovies.Utils;
 
+import android.content.res.Resources;
 import android.net.Uri;
 import android.util.Log;
+
+import com.example.popularmovies.R;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,34 +35,33 @@ import java.util.Scanner;
  */
 public class NetworkUtils {
 
-    final static String MOVIEDB_BASE_URL =
+    private final static String MOVIEDB_BASE_URL =
             "https://api.themoviedb.org/3/discover/movie?";
-
     /*
      * The sort field. One of stars, forks, or updated.
      * Default: results are sorted by best match if no field is specified.
      */
-    final static String PARAM_SORT = "sort_by";
-
-
-    final static String API_KEY_LABEL = "api_key";
-    final static String API_KEY = "3c5b2ed2d4361f91b5f0bfb1186d5619";
+    private final static String PARAM_SORT = "sort_by";
+    private final static String API_KEY_LABEL = "api_key";
+    private final static String API_KEY = "3c5b2ed2d4361f91b5f0bfb1186d5619";
 
     /**
      * Builds the URL used to query MovieDB.
      *
-     * @param sortby The keyword that will be queried for.
+     * @param sortBy The keyword that will be queried for.
      * @return The URL to use to query the MovieDB server.
      */
-    public static URL buildUrl(String sortby) {
+    public static URL buildUrl(String sortBy) {
+
         Uri builtUri = Uri.parse(MOVIEDB_BASE_URL).buildUpon()
                 .appendQueryParameter(API_KEY_LABEL,API_KEY)
-                .appendQueryParameter(PARAM_SORT, sortby)
+                .appendQueryParameter(PARAM_SORT, sortBy)
                 .build();
 
         URL url = null;
         try {
             url = new URL(builtUri.toString());
+            Log.d("buildurl", "buildUrl: " + url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -77,13 +79,9 @@ public class NetworkUtils {
     public static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
-            Log.d("networkutils", "getResponseFromHttpUrl1: ");
             InputStream in = urlConnection.getInputStream();
-            Log.d("networkutils", "getResponseFromHttpUrl2: ");
-
             Scanner scanner = new Scanner(in);
             scanner.useDelimiter("\\A");
-
             boolean hasInput = scanner.hasNext();
             if (hasInput) {
                 return scanner.next();
@@ -92,7 +90,7 @@ public class NetworkUtils {
             }
         } catch (FileNotFoundException e){
             Log.d("NetworkUtils", "getResponseFromHttpUrl: ");
-            return "nothing";}
+            return Resources.getSystem().getString(R.string.nothing);}
         finally {
             urlConnection.disconnect();
         }

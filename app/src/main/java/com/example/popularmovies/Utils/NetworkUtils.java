@@ -19,6 +19,7 @@ package com.example.popularmovies.Utils;
 import android.net.Uri;
 import android.util.Log;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -76,7 +77,10 @@ public class NetworkUtils {
     public static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
+            Log.d("networkutils", "getResponseFromHttpUrl1: ");
             InputStream in = urlConnection.getInputStream();
+            Log.d("networkutils", "getResponseFromHttpUrl2: ");
+
             Scanner scanner = new Scanner(in);
             scanner.useDelimiter("\\A");
 
@@ -86,7 +90,10 @@ public class NetworkUtils {
             } else {
                 return null;
             }
-        } finally {
+        } catch (FileNotFoundException e){
+            Log.d("NetworkUtils", "getResponseFromHttpUrl: ");
+            return "nothing";}
+        finally {
             urlConnection.disconnect();
         }
     }

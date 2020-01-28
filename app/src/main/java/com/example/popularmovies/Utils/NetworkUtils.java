@@ -40,7 +40,7 @@ public class NetworkUtils {
      */
     private final static String PARAM_SORT = "sort_by";
     private final static String API_KEY_LABEL = "api_key";
-    private final static String API_KEY = "3c5b2ed2d4361f91b5f0bfb1186d5619";
+    private final static String API_KEY = "";
 
 
     /**

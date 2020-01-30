@@ -19,6 +19,8 @@ package com.example.popularmovies.Utils;
 import android.net.Uri;
 import android.util.Log;
 
+import com.example.popularmovies.BuildConfig;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +41,7 @@ public class NetworkUtils {
      * Default: results are sorted by best match if no field is specified.
      */
     private final static String API_KEY_LABEL = "api_key";
-    private final static String API_KEY = "3c5b2ed2d4361f91b5f0bfb1186d5619";
+    private  static final String API_KEY = BuildConfig.api;
 
 
 
@@ -53,11 +55,12 @@ public class NetworkUtils {
 
         Uri builtUri = Uri.parse(MOVIEDB_BASE_URL).buildUpon()
                 .appendEncodedPath(sortBy)
-                .appendQueryParameter(API_KEY_LABEL,API_KEY)
+                .appendQueryParameter(API_KEY_LABEL, API_KEY)
                 .build();
 
         URL url = null;
         try {
+            Log.d("network", "buildUrl: " + url);
             url = new URL(builtUri.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();

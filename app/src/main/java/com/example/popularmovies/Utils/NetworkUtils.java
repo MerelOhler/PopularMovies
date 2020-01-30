@@ -33,14 +33,14 @@ import java.util.Scanner;
 public class NetworkUtils {
 
     private final static String MOVIEDB_BASE_URL =
-            "https://api.themoviedb.org/3/discover/movie?";
+            "https://api.themoviedb.org/3?";
     /*
      * The sort field. One of stars, forks, or updated.
      * Default: results are sorted by best match if no field is specified.
      */
-    private final static String PARAM_SORT = "sort_by";
     private final static String API_KEY_LABEL = "api_key";
-    private final static String API_KEY = "";
+    private final static String API_KEY = "3c5b2ed2d4361f91b5f0bfb1186d5619";
+
 
 
     /**
@@ -52,8 +52,8 @@ public class NetworkUtils {
     public static URL buildUrl(String sortBy) {
 
         Uri builtUri = Uri.parse(MOVIEDB_BASE_URL).buildUpon()
+                .appendEncodedPath(sortBy)
                 .appendQueryParameter(API_KEY_LABEL,API_KEY)
-                .appendQueryParameter(PARAM_SORT, sortBy)
                 .build();
 
         URL url = null;

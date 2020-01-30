@@ -8,6 +8,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+
+
             <ImageView
                 android:id="@+id/movie_poster_detail_iv"
                 android:layout_width="match_parent"
@@ -17,6 +19,16 @@
                 android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
+
+            <ProgressBar
+                android:id="@+id/progressbar_movie_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="250dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/movie_poster_detail_iv"
+                app:layout_constraintBottom_toBottomOf="@id/movie_poster_detail_iv"/>
 
             <TextView
                 android:id="@+id/movie_poster_unavailable_detail_tv"

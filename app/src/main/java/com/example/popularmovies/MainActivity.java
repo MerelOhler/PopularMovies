@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,8 +26,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity implements MoviePosterAdapter.MoviePosterAdapterOnClickHandler {
-    static private final String MOST_POPULAR_KEY = "popularity.desc";
-    static private final String HIGHEST_RATED_KEY = "vote_average.desc";
+    static private final String MOST_POPULAR_KEY = "movie/popular";
+    static private final String HIGHEST_RATED_KEY = "movie/top_rated";
     private RecyclerView mRecyclerView;
     private MoviePosterAdapter mMoviePosterAdapter;
     private GridLayoutManager mLayoutManager;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
         checkForNetwork();
 
         mLayoutManager
-                = new GridLayoutManager(this,2);
+                = new GridLayoutManager(this,numberOfColumns());
 
 
         model = ViewModelProviders.of(this).get(MainViewModel.class);
@@ -132,4 +133,14 @@ public class MainActivity extends AppCompatActivity implements MoviePosterAdapte
         }
     }
 
+    private int numberOfColumns() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        // You can change this divider to adjust the size of the item
+        int widthDivider = 400;
+        int width = displayMetrics.widthPixels;
+        int nColumns = width / widthDivider;
+        if (nColumns < 2) return 2; //to keep the grid aspect
+        return nColumns;
+    }
 }
